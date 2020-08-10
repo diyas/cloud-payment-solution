@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: Profiles
+  profiles:
+    active: local
+#info:
+#  name: ${spring.application.name}
+#  description: Push Notification
+#  environment: ${spring.profiles.active}
+#  version: 1.0.0

@@ -1,0 +1,42 @@
+spring:
+  datasource:
+    driverClassName: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://localhost:2600/midware_3rd_party_pos?autoReconnect=true
+    username: root
+    password: P@ssw0rd.15!
+  jpa:
+    hibernate.ddl-auto: update
+    generate-ddl: true
+    show-sql: true
+    database-platform: org.hibernate.dialect.MariaDBDialect
+  security:
+    oauth2:
+      resource:
+        filter-order: 3
+oauth2:
+  tokenUrl: http://localhost:8080/oauth2/oauth/token
+  checkTokenUrl: http://localhost:8080/oauth2/oauth/check_token
+  authorizeTokenUrl: http://localhost:8080/oauth2/oauth/authorize
+  clientId: tester
+  clientSecret: tester
+  tokenExpired: 60
+  refreshToken: 345
+mqtt:
+  automaticReconnect: true
+  cleanSession: false
+  ssl: true
+  connectionTimeout: 10
+  clientId: ${COMPUTERNAME}-MQTT
+  hostname: 36.37.119.117
+  port: 61068
+server:
+  port: 8081
+  servlet:
+    context-path: /push_notification
+logging:
+  pattern:
+    console: "%d %-5level %logger : %msg%n"
+    file: "%d %-5level [%thread] %logger : %msg%n"
+  level:
+    com.push.app: DEBUG
+  file: /logs/cloud_payment_production.log

@@ -1,0 +1,45 @@
+spring:
+  datasource:
+    driverClassName: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://10.50.11.79:3306/midware_3rd_party_pos?autoReconnect=true
+    username: root
+    password: P@ssw0rd.15!
+  redis:
+    host: localhost
+    port: 6379
+    max-total: 128
+    max-idle: 128
+    min-idle: 16
+    min-evictable-idle-time-millis: 60
+    time-between-eviction-runs-millis: 30
+    block-when-exhausted: true
+    use-pool: true
+  jpa:
+    hibernate.ddl-auto: update
+    generate-ddl: false
+    show-sql: false
+    database-platform: org.hibernate.dialect.MariaDBDialect
+  security:
+    oauth2:
+      resource:
+        filter-order: 3
+oauth2:
+  tokenUrl: http://localhost:61055/oauth2/oauth/token
+  checkTokenUrl: http://localhost:61055/oauth2/oauth/check_token
+  authorizeTokenUrl: http://localhost:61055/oauth2/oauth/authorize
+  clientId: tester
+  clientSecret: tester
+mqtt:
+  automaticReconnect: true
+  cleanSession: true
+  ssl: true
+  connectionTimeout: 60
+  clientId: SWIPEPAY-CLOUD
+  hostname: 10.50.11.61
+  port: 8883
+server:
+  port: 8081
+  servlet:
+    context-path: /pushnotification
+logging:
+  config: classpath:logback-server.xml
