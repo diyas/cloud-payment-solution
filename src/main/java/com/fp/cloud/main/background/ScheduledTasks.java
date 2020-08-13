@@ -36,10 +36,10 @@ public class ScheduledTasks {
 //        copyDataTransaction();
 //    }
 
-    @Scheduled(cron = "*/10 * * * * *")
-    public void syncData() {
-        syncClientService.sync();
-    }
+//    @Scheduled(cron = "*/10 * * * * *")
+//    public void syncData() {
+//        syncClientService.sync();
+//    }
 
     private void copyDataTransaction(){
         Collection c = Arrays.asList(TrStatusEnum.PENDING, TrStatusEnum.SUCCESS);

@@ -2,7 +2,7 @@ spring:
   application:
     name: Profiles
   profiles:
-    active: local
+    active: ${profiles}
 #info:
 #  name: ${spring.application.name}
 #  description: Push Notification

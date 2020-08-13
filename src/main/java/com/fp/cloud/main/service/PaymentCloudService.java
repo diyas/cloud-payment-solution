@@ -44,7 +44,7 @@ public class PaymentCloudService {
         PaymentMethodView method = payRepo.findById(request.getTrMethod());
         mqttService.connect();
         if (request.getTrNoPos() != null)
-            tr = trRepo.findByTrNoPosAndTrStatus(request.getTrNoPos(), TrStatusEnum.PENDING);
+            tr = trRepo.findByUserIdAndTrNoPosAndTrStatus(Utility.getUser(), request.getTrNoPos(), TrStatusEnum.PENDING);
         if (tr == null){
             tr = new Transaction();
             tr.setTrNo(pointerCode + "-" + Utility.getUser() + "-" + System.currentTimeMillis());

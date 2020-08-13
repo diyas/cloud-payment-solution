@@ -12,6 +12,7 @@ public interface TransactionRepo extends JpaRepository<Transaction, Long> {
     List<Transaction> findAllByTrNo(String trNo);
     List<Transaction> findAllByTrDateAndTrStatusIn(Date trDate, Collection<String> statusIn);
     Transaction findByUserIdAndTrNo(String userId, String trNo);
+    Transaction findByUserIdAndTrNoPosAndTrStatus(String userId, String trNoPos, TrStatusEnum trStatus);
     Transaction findByTrNoPosAndTrStatus(String trNoPos, TrStatusEnum trStatus);
     //@Query(value = "select t from transaction t where t.userId = :userid and t.trMethod <> :method and t.trStatus = :status and t.trDate like %:trdate%", nativeQuery = true)
     List<Transaction> findByTrMethodIsNotAndAndUserIdAndTrStatusAndTrDate(int method, String userId, TrStatusEnum trStatus, Date trDate);

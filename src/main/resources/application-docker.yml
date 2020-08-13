@@ -1,12 +1,12 @@
 spring:
   datasource:
     driverClassName: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://localhost:2600/midware_3rd_party_pos?autoReconnect=true
+    url: jdbc:mariadb://172.25.48.1:2600/midware_3rd_party_pos?autoReconnect=true
     username: root
     password: P@ssw0rd.15!
   redis:
-    host: localhost
-    port: 6379
+    host: ${redis-host}
+    port: ${redis-port}
     max-total: 128
     max-idle: 128
     min-idle: 16
@@ -24,10 +24,10 @@ spring:
       resource:
         filter-order: 3
 oauth2:
-  tokenUrl: http://localhost:8080/oauth2/oauth/token
-  checkTokenUrl: http://localhost:8080/oauth2/oauth/check_token
-  syncClient: http://localhost:8080/oauth2/sync/client
-  authorizeTokenUrl: http://localhost:8080/oauth2/oauth/authorize
+  tokenUrl: http://oauth2:8080/oauth2/oauth/token
+  checkTokenUrl: http://oauth2:8080/oauth2/oauth/check_token
+  syncClient: http://oauth2:8080/oauth2/sync/client
+  authorizeTokenUrl: http://oauth2:8080/oauth2/oauth/authorize
   clientId: tester
   clientSecret: tester
 mqtt:
@@ -43,4 +43,4 @@ server:
   servlet:
     context-path: /pushnotification
 logging:
-  config: classpath:logback-local.xml
+  config: classpath:logback-server.xml

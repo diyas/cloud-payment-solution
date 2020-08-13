@@ -40,8 +40,8 @@ public class PaymentStatusCtl {
     }
 
     @PutMapping(value = "/v1/payment")
-    @ApiOperation(value = "Payment Response", notes = "Response Payment Transaction", response = Response.class)
-    public ResponseEntity<String> respSettlement(@RequestBody RequestUpdateStatus reqUpdate) throws MqttException {
+    @ApiOperation(value = "Payment Response", notes = "Update Status transaction", response = Response.class)
+    public ResponseEntity<String> updateStatusPayment(@RequestBody RequestUpdateStatus reqUpdate) throws MqttException {
         return listener.updateStatusPayment(reqUpdate);
     }
 
