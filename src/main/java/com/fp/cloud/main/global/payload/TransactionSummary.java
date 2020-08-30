@@ -9,6 +9,6 @@ import java.util.List;
 @Data
 public class TransactionSummary {
     private String summaryDate;
-    private List<Transaction> allTransaction;
+    private List<Transaction> qrTransaction;
     private Double totalAmount;
 }

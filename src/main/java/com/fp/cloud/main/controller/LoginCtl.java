@@ -1,6 +1,5 @@
 package com.fp.cloud.main.controller;
 
-import com.fp.cloud.configuration.mqtt.MqttService;
 import com.fp.cloud.configuration.oauth.Login;
 import com.fp.cloud.configuration.oauth.TokenPayload;
 import com.fp.cloud.main.global.payload.Response;

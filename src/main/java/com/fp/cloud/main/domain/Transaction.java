@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -36,7 +37,7 @@ public class Transaction {
     @ApiModelProperty(notes = "Base Amount")
     private Double trAmount;
     @Column
-    @Temporal(TemporalType.DATE)
+    @CreationTimestamp
     @ApiModelProperty(notes = "Transaction Date")
     private Date trDate;
     @Column

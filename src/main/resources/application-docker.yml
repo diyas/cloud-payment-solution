@@ -1,7 +1,7 @@
 spring:
   datasource:
     driverClassName: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://172.25.48.1:2600/midware_3rd_party_pos?autoReconnect=true
+    url: jdbc:mariadb://${db-host}/midware_3rd_party_pos?autoReconnect=true
     username: root
     password: P@ssw0rd.15!
   redis:

@@ -15,7 +15,8 @@ services:
 #    depends_on:
 #      - redis
     environment:
-      - Profiles=docker
+      - db-host=172.24.112.1:2600
+      - profiles=docker
       - redis_host=redis
       - redis_port=6379
     networks:

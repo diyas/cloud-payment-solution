@@ -5,6 +5,7 @@ import com.fp.cloud.main.domain.PaymentMethodView;
 import com.fp.cloud.main.domain.Settlement;
 import com.fp.cloud.main.domain.Transaction;
 import com.fp.cloud.main.global.TrStatusEnum;
+import com.fp.cloud.main.global.TrTypeEnum;
 import com.fp.cloud.main.global.payload.*;
 import com.fp.cloud.main.repository.PaymentMethodRepo;
 import com.fp.cloud.main.repository.SettlementRepo;
@@ -13,10 +14,10 @@ import com.fp.cloud.utility.Utility;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -37,7 +38,6 @@ public class PaymentCloudService {
     @Autowired
     private SettlementRepo setRepo;
 
-
     public ResponseEntity<String> postSale(RequestPayment request) throws MqttException {
         boolean isNew = false;
         Transaction tr = null;
@@ -55,6 +55,7 @@ public class PaymentCloudService {
             tr.setTrTopicPos("payment/pos/" + Utility.getUser());
             tr.setTrStatus(TrStatusEnum.PENDING);
             tr.setTrNoPos(request.getTrNoPos());
+            tr.setTrType(TrTypeEnum.SALE);
             isNew = true;
         }
         Transaction trResult = null;
@@ -90,16 +91,45 @@ public class PaymentCloudService {
         return Utility.setResponse("payment has been success", tr);
     }
 
-    public void cancelTransaction(String trNo) throws Exception {
-        final long start = System.currentTimeMillis();
-        Transaction tr = trRepo.findByTrNoPosAndTrStatus(trNo, TrStatusEnum.PENDING);
-        tr.setTrStatus(TrStatusEnum.CANCEL);
-        trRepo.save(tr);
-        log.info("Transaction ID "+ tr.getTrNoPos());
+    public ResponseEntity<String> cancelTransaction(String trNo) {
+        Transaction tr = trRepo.findByTrNoAndTrStatus(trNo, TrStatusEnum.PENDING);
+        if (tr != null){
+            tr.setTrStatus(TrStatusEnum.CANCEL);
+            Transaction canceled = trRepo.save(tr);
+            return Utility.setResponse("payment has been canceled", canceled);
+        }
+        return Utility.setResponse(HttpStatus.OK, "payment not found", null);
+
     }
 
-    public void postVoid(){
+    public ResponseEntity<String> postVoidCDCP(RequestVoid requestVoid) throws MqttException {
+        Transaction transaction = trRepo.findByInvoiceNoAndTrMethod(requestVoid.getInvoiceNumber(), 1);
+        Transaction tr = new Transaction();
+        mqttService.connect();
+        if (transaction != null){
+            tr.setTrNo(pointerCode + "-" + Utility.getUser() + "-" + System.currentTimeMillis());
+            tr.setUserId(Utility.getUser());
+            tr.setTrAmount(transaction.getTrAmount());
+            tr.setTrMethod(transaction.getTrMethod());
+            tr.setTrTopicEdc("void/pos/status/" + transaction.getTrMethod() + "/" + Utility.getUser());
+            tr.setTrTopicPos("void/pos/" + Utility.getUser());
+            tr.setTrStatus(TrStatusEnum.PENDING);
+            tr.setTrNoPos(transaction.getTrNoPos());
+            tr.setInvoiceNo(transaction.getInvoiceNo());
+            tr.setTrType(TrTypeEnum.VOID);
 
+            Transaction trResult = null;
+            if (mqttService.isConnected())
+                trResult = trRepo.save(tr);
+            if (trResult != null) {
+                String msg = Utility.objectToString(requestVoid);
+                mqttService.publish(tr.getTrTopicPos(), msg);
+            }
+        } else {
+            return Utility.setResponse("void failed published", null);
+        }
+        mqttService.disconnect();
+        return Utility.setResponse("void has been published", tr);
     }
 
     public ResponseEntity<String> postSettlement(RequestSettlement req) throws MqttException{
@@ -154,7 +184,7 @@ public class PaymentCloudService {
         Double total = transactionList.stream().filter(x -> x.getTrAmount() > transactionList.size()).mapToDouble(x -> x.getTrAmount()).sum();
         TransactionSummary trSum = new TransactionSummary();
         trSum.setSummaryDate(Utility.getDate().toString());
-        trSum.setAllTransaction(transactionList);
+        trSum.setQrTransaction(transactionList);
         trSum.setTotalAmount(total);
         if (transactionList.size() == 0)
             return Utility.setResponse("No Transaction List", null);

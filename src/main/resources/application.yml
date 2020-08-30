@@ -1,8 +1,9 @@
 spring:
   application:
-    name: Profiles
+    name: swipepay-cloud
   profiles:
-    active: ${profiles}
+#    active: ${profiles}
+    active: dev
 #info:
 #  name: ${spring.application.name}
 #  description: Push Notification

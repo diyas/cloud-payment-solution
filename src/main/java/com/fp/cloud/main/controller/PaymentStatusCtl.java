@@ -45,33 +45,46 @@ public class PaymentStatusCtl {
         return listener.updateStatusPayment(reqUpdate);
     }
 
-    @GetMapping(value = "/v1/payment/status/{trNo}")
-    @ApiOperation(value = "Check Payment Status", notes = "Check Payment Status", response = Response.class)
-    public ResponseEntity<String> getStatusPayment(@PathVariable String trNo) {
-        Transaction tr = trRepo.findByUserIdAndTrNo(Utility.getUser(), trNo);
-        if (tr == null)
-            return Utility.setResponse(TrStatusEnum.INVALID.toString(), null);
-        return Utility.setResponse(tr.getTrStatus().toString(), tr);
+    @PutMapping(value = "/v1/payment/cancel/{tr_no}")
+    @ApiOperation(value = "Payment Response", notes = "Cancel transaction", response = Response.class)
+    public ResponseEntity<String> cancelTransaction(@PathVariable("tr_no") String trNo) throws Exception {
+        return listener.cancelTransaction(trNo);
     }
 
-    @PostMapping(value = "/v1/settlement")
-    @ApiOperation(value = "Settlement Request", notes = "Request Settlement Transaction", response = Response.class)
-    public ResponseEntity<String> reqSettlement(@ApiParam(value = "Request Body Parameter", required = true)
-                                                    @RequestBody RequestSettlement request) throws MqttException {
-        return listener.postSettlement(request);
-    }
+//    @GetMapping(value = "/v1/payment/status/{trNo}")
+//    @ApiOperation(value = "Check Payment Status", notes = "Check Payment Status", response = Response.class)
+//    public ResponseEntity<String> getStatusPayment(@PathVariable String trNo) {
+//        Transaction tr = trRepo.findByUserIdAndTrNo(Utility.getUser(), trNo);
+//        if (tr == null)
+//            return Utility.setResponse(TrStatusEnum.INVALID.toString(), null);
+//        return Utility.setResponse(tr.getTrStatus().toString(), tr);
+//    }
 
-    @PutMapping(value = "/v1/settlement")
-    @ApiOperation(value = "Settlement Response", notes = "Response Settlement Transaction", response = Response.class)
-    public ResponseEntity<String> respSettlement(@ApiParam(value = "Request Id Parameter", required = true)
-                                                @PathVariable String reqId) throws MqttException {
-        return listener.updateStatusSettlement(reqId);
-    }
+//    @PostMapping(value = "/v1/settlement")
+//    @ApiOperation(value = "Settlement Request", notes = "Request Settlement Transaction", response = Response.class)
+//    public ResponseEntity<String> reqSettlement(@ApiParam(value = "Request Body Parameter", required = true)
+//                                                    @RequestBody RequestSettlement request) throws MqttException {
+//        return listener.postSettlement(request);
+//    }
+//
+//    @PutMapping(value = "/v1/settlement")
+//    @ApiOperation(value = "Settlement Response", notes = "Response Settlement Transaction", response = Response.class)
+//    public ResponseEntity<String> respSettlement(@ApiParam(value = "Request Id Parameter", required = true)
+//                                                @PathVariable String reqId) throws MqttException {
+//        return listener.updateStatusSettlement(reqId);
+//    }
+//
+//    @GetMapping(value = "/v1/transaction/history")
+//    @ApiOperation(value = "QR Transaction History", notes = "List QR Transaction Success", response = Response.class)
+//    public ResponseEntity<String> historySettlement(@ApiParam(value = "Request Body Parameter", required = true)
+//                                                        @RequestBody RequestHistorySettlement date) {
+//        return listener.historyQr(date);
+//    }
 
-    @GetMapping(value = "/v1/transaction/history")
-    @ApiOperation(value = "QR Transaction History", notes = "List QR Transaction Success", response = Response.class)
-    public ResponseEntity<String> historySettlement(@ApiParam(value = "Request Body Parameter", required = true)
-                                                        @RequestBody RequestHistorySettlement date) {
-        return listener.historyQr(date);
+    @PostMapping(value = "/v1/transaction/void/publish")
+    @ApiOperation(value = "Request Void Transaction", notes = "Request Void Transaction", response = Response.class)
+    public ResponseEntity<String> publishVoid(@ApiParam(value = "Request Body Parameter", required = true)
+                                                    @RequestBody RequestVoid requestVoid) throws MqttException {
+        return listener.postVoidCDCP(requestVoid);
     }
 }

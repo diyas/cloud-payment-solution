@@ -19,4 +19,5 @@ public interface TransactionRepo extends JpaRepository<Transaction, Long> {
     List<Transaction> findByUserIdAndTrStatus(String userId, TrStatusEnum trStatus);
     Transaction findByTrNo(String trNo);
     Transaction findByTrNoAndTrStatus(String trNo, TrStatusEnum trStatus);
+    Transaction findByInvoiceNoAndTrMethod(String invoiceNo, int method);
 }
